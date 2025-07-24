@@ -1,0 +1,126 @@
+---
+title: "R Notebook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: console
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r 00_LibraryConfig}
+# install.packages("scatterplot3d") # Install
+library(scatterplot3d) # load
+#install.packages("plotwidgets")
+library(plotwidgets)
+library(tidyverse)
+library(readxl)
+```
+
+```{r 01_ReadData}
+str_filepath = r"{W:\GitHub\PHD_XLS_Validator\Orcinus_orca(39 points).xlsx}"
+# df_csv <- read.csv(str_filepath,
+#                    header=FALSE,
+#                    col.names=c("X","Y","Z"))
+df_csv <- as.data.frame(read_excel(str_filepath, sheet = "Rdata"))
+df_csv <- df_csv|>
+            mutate_at(vars(pt.type), factor) 
+            # mutate(pt.type=as.factor(ifelse(Z < -20,"base","arch")))
+# '#0101FF','#014FFF','#019CFF','#01E4FF','#01FFCC','#01FF7F','#01FF37','#19FF01','#67FF01','#B4FF01','#FFFC01','#FFB401','#FF6701','#FF1901','#FF0131','#FF017F','#FF01CC','#E401FF','#9601FF'
+
+colors <- c("#E69F00", "#56B4E9","red")
+colors <- colors[as.numeric(df_csv$pt.type)]
+scatterplot3d(df_csv[,1:3],
+              pch = df_csv$pt.shape,h
+              color=df_csv$pt.color)
+              # highlight.3d = TRUE)
+```
+
+```{r}
+x_colors <- c(red="red",
+   blue="blue",
+   yellow="yellow",
+   orange="#FFAA0066");
+hslM <- col2hsl(x_colors);
+hslM;
+#>       red blue yellow orange
+#> H       0  240     60   40.0
+#> S     100  100    100  100.0
+#> L      50   50     50   50.0
+#> alpha   1    1      1    0.4
+
+# Now convert back to R hex colors
+colorV <- hsl2col(hslM);
+colorV;
+#>         red        blue      yellow      orange 
+#>   "#FF0000"   "#0000FF"   "#FFFF00" "#FFAA0066" 
+
+for h in (10:360:12)
+
+```
+
+```{r}
+data(iris)
+
+colors <- c("#999999", "#E69F00", "#56B4E9")
+colors <- colors[as.numeric(iris$Species)]
+scatterplot3d(iris[,1:3], pch = 16, color=colors)
+
+```
+
+
+```{r}
+[1] "#FF2A00"
+[1] "#FF5E00"
+[1] "#FF9000"
+[1] "#FFC400"
+[1] "#FFF600"
+[1] "#D4FF00"
+[1] "#A2FF00"
+[1] "#6EFF00"
+[1] "#3CFF00"
+[1] "#09FF00"
+[1] "#00FF2A"
+[1] "#00FF5E"
+[1] "#00FF91"
+[1] "#00FFC3"
+[1] "#00FFF7"
+[1] "#00D5FF"
+[1] "#00A2FF"
+[1] "#006EFF"
+[1] "#003CFF"
+[1] "#0008FF"
+[1] "#2B00FF"
+[1] "#5D00FF"
+[1] "#9000FF"
+[1] "#C300FF"
+[1] "#F700FF"
+[1] "#FF00D4"
+[1] "#FF00A2"
+[1] "#FF006F"
+[1] "#FF003C"
+[1] "#FF0008"
+
+ [1] "#FF0000" "#FF3D00" "#FF7A00" "#FFB800" "#FFF500" "#CCFF00" "#8FFF00" "#52FF00" "#14FF00" "#00FF29"
+[11] "#00FF66" "#00FFA3" "#00FFE0" "#00E0FF" "#00A3FF" "#0066FF" "#0029FF" "#1400FF" "#5200FF" "#8F00FF"
+[21] "#CC00FF" "#FF00F5" "#FF00B8" "#FF007A" "#FF003D"
+
+
+  [1] "#FF0000" "#FF0C00" "#FF1800" "#FF2500" "#FF3100" "#FF3D00" "#FF4900" "#FF5600" "#FF6200"
+ [10] "#FF6E00" "#FF7A00" "#FF8700" "#FF9300" "#FF9F00" "#FFAB00" "#FFB800" "#FFC400" "#FFD000"
+ [19] "#FFDC00" "#FFE900" "#FFF500" "#FDFF00" "#F1FF00" "#E4FF00" "#D8FF00" "#CCFF00" "#C0FF00"
+ [28] "#B4FF00" "#A7FF00" "#9BFF00" "#8FFF00" "#83FF00" "#76FF00" "#6AFF00" "#5EFF00" "#52FF00"
+ [37] "#45FF00" "#39FF00" "#2DFF00" "#21FF00" "#14FF00" "#08FF00" "#00FF04" "#00FF10" "#00FF1D"
+ [46] "#00FF29" "#00FF35" "#00FF41" "#00FF4E" "#00FF5A" "#00FF66" "#00FF72" "#00FF7E" "#00FF8B"
+ [55] "#00FF97" "#00FFA3" "#00FFAF" "#00FFBC" "#00FFC8" "#00FFD4" "#00FFE0" "#00FFED" "#00FFF9"
+ [64] "#00F9FF" "#00EDFF" "#00E0FF" "#00D4FF" "#00C8FF" "#00BCFF" "#00AFFF" "#00A3FF" "#0097FF"
+ [73] "#008BFF" "#007EFF" "#0072FF" "#0066FF" "#005AFF" "#004EFF" "#0041FF" "#0035FF" "#0029FF"
+ [82] "#001DFF" "#0010FF" "#0004FF" "#0800FF" "#1400FF" "#2100FF" "#2D00FF" "#3900FF" "#4500FF"
+ [91] "#5200FF" "#5E00FF" "#6A00FF" "#7600FF" "#8300FF" "#8F00FF" "#9B00FF" "#A700FF" "#B400FF"
+[100] "#C000FF" "#CC00FF" "#D800FF" "#E400FF" "#F100FF" "#FD00FF" "#FF00F5" "#FF00E9" "#FF00DC"
+[109] "#FF00D0" "#FF00C4" "#FF00B8" "#FF00AB" "#FF009F" "#FF0093" "#FF0087" "#FF007A" "#FF006E"
+[118] "#FF0062" "#FF0056" "#FF0049" "#FF003D" "#FF0031" "#FF0025" "#FF0018" "#FF000C"
+
+
+```
