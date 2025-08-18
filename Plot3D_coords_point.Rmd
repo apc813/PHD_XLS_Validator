@@ -1,0 +1,108 @@
+---
+title: "R Notebook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: console
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r 00_LibraryConfig}
+library(rstudioapi)
+# install.packages("scatterplot3d") # Install
+library(scatterplot3d) # load
+#install.packages("plotwidgets")
+library(plotwidgets)
+library(tidyverse)
+library(readxl)
+```
+
+```{r 00b_config_local}
+str_fldrpath =  file.path("W:","GitHub","PHD_XLS_Validator")
+
+# if (!file.exists(str_filepath_coordinates)) {stop(paste0("File '",str_filepath_txt,"' not found."))}
+# str_filepath_txt_arch = file.path(str_filepath_base,"Squalodon_calvertensis_arch_ordered_V1.txt")
+# if (!file.exists(str_filepath_txt_arch)) {stop(paste0("File '",str_filepath_txt,"' not found."))}
+# str_filepath_txt_base = file.path(str_filepath_base,"squalodon_calvertensis_base_v2_ordered.txt")
+# if (!file.exists(str_filepath_txt_base)) {stop(paste0("File '",str_filepath_txt,"' not found."))}
+```
+
+```{r 01_ReadData}
+str_filepath_coordinates = selectFile(caption="Select file with 3d co-ordinates",
+                                      path = str_fldrpath,
+                                      filter = "Text files (*.txt)",
+                                      existing = TRUE)
+df_coords <- read.csv(str_filepath_coordinates,
+                   header=FALSE,
+                   col.names=c("X","Y","Z"))
+
+df_coords <- df_coords|>
+                  mutate(pt.color=rainbow(nrow(df_coords),end=0.75))|>
+                  mutate(pt.shape=16)
+
+vctr_axis = c(plyr::round_any(min(min(df_coords$X),min(df_coords$Y),min(df_coords$Z)),10,f=floor),
+              plyr::round_any(max(max(df_coords$X),max(df_coords$Y),max(df_coords$Z)),10,f=ceiling))
+
+scatterplot3d(df_coords[,c('X','Y','Z')],
+              pch = df_coords$pt.shape,
+              color=df_coords$pt.color,
+              box = TRUE,
+              grid = TRUE,
+              angle = 35,
+              xlim = vctr_axis,
+              ylim = vctr_axis,
+              zlim = vctr_axis,
+              main=str_filepath_coordinates)
+
+
+```
+
+```{r}
+str_filepath_coords_arch = selectFile(caption="Select file with 3d co-ordinates - Arch",
+                                      path = str_fldrpath,
+                                      filter = "Text files (*.txt)",
+                                      existing = TRUE)
+str_filepath_coords_base = selectFile(caption="Select file with 3d co-ordinates - Base",
+                                      path = str_fldrpath,
+                                      filter = "Text files (*.txt)",
+                                      existing = TRUE)
+
+
+df_csv_arch <- read.csv(str_filepath_coords_arch,
+                   header=FALSE,
+                   col.names=c("X","Y","Z"))
+df_csv_base <- read.csv(str_filepath_coords_base,
+                   header=FALSE,
+                   col.names=c("X","Y","Z"))
+df_coords_comb <- df_csv_arch|>
+                  mutate(pt.color=rainbow(nrow(df_csv_arch),end = 0.75))|>
+                  mutate(pt.shape=16)
+df_coords_comb <- df_coords_comb|>
+            bind_rows(df_csv_base|>
+                        mutate(pt.color=rainbow(nrow(df_csv_base),end = 0.75))|>
+                        mutate(pt.shape=17))
+df_coords_comb <- df_coords_comb|>
+                        mutate(pt.color=rainbow(nrow(df_coords_comb),end = 0.75))
+
+
+vctr_axis = c(plyr::round_any(min(min(df_coords_comb$X),min(df_coords_comb$Y),min(df_coords_comb$Z)),10,f=floor),
+              plyr::round_any(max(max(df_coords_comb$X),max(df_coords_comb$Y),max(df_coords_comb$Z)),10,f=ceiling))
+
+scatterplot3d(df_coords_comb[,c('X','Y','Z')],
+              pch = df_coords_comb$pt.shape,
+              color=df_coords_comb$pt.color,
+              box = TRUE,
+              grid = TRUE,
+              angle = 35,
+              xlim = vctr_axis,
+              ylim = vctr_axis,
+              zlim = vctr_axis,
+              main=paste(paste("base","=",str_filepath_coords_base),
+                       paste("arch","=",str_filepath_coords_arch),
+                       sep='\n'))
+
+
+
+```
